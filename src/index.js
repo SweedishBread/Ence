@@ -26,6 +26,37 @@ const commandFolders = fs.readdirSync("./src/commands");
     client.login(process.env.token)
 })();
 
+client.on('messageCreate', async (message) => {
+  // Check if the message was sent by a bot or is not in a guild
+  if (message.author.bot || !message.guild) return;
+
+  // Get the prefix for this guild (you can store this in a database)
+  const guildPrefix = getGuildPrefix(message.guild.id);
+
+  // Check if the message starts with the guild's prefix or the default prefix
+  if (message.content.startsWith(guildPrefix) || message.content.startsWith(defaultPrefix)) {
+    // Remove the prefix from the message content and split it into an array of arguments
+    const args = message.content.slice(guildPrefix.length || defaultPrefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase(); // Get the command (the first argument)
+
+    // Implement your command handling logic here
+    if (command === 'ping') {
+      // Example command: !ping
+      message.reply('Pong!');
+    } else if (command === 'help') {
+      // Example command: !help
+      message.reply('This is a help message.');
+    }
+  }
+});
+
+// Replace this function with your own logic to fetch guild prefixes from a database
+function getGuildPrefix(guildId) {
+  // Example: Fetch the prefix from a database or configuration file
+  return '!';
+}
+-------------------------------------------------------------------------------------------
+
 /// TICKET SYSTEM //
  
 const ticketSchema = require("../src/schemas/ticketSchema");
